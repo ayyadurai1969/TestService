@@ -1,0 +1,61 @@
+
+
+in DataContract
+
+ string _JsonResults = null;
+
+ [DataMember]
+        public string JsonResults
+        {
+            get { return _JsonResults; }
+            set { _JsonResults = value; }
+        }
+
+
+
+use as 
+
+
+ utO.JsonResults = dataTableToJson(db);
+
+
+
+
+
+method
+
+  private string dataTableToJson(DataTable table)
+        {
+            List<Dictionary<string, object>> listToReturn = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row = null;
+            for (int rowIndex = 0; rowIndex < table.Rows.Count; ++rowIndex)
+            {
+                row = new Dictionary<string, object>();
+                for (int colIndex = 0; colIndex < table.Columns.Count; ++colIndex)
+                {
+                    DataColumn col = table.Columns[colIndex];
+                    DataRow dr = table.Rows[rowIndex];
+                    if (col.ColumnName == "EndDate" || col.ColumnName == "StartDate" || col.ColumnName == "UpdateDate" || col.ColumnName == "CreateDate" || col.ColumnName == "CreatedDate" || col.ColumnName == "ValidDate")
+                    {
+                        string value = String.Format("{0:d}", dr[col]);
+                        row.Add(col.ColumnName, value);
+                        //string value = dr[col].ToString();
+                        //if(value.Length >= 10)
+                        //{
+                        //    value = value.Substring(0, 10);
+                        //    value.Trim();
+                        //}
+                        //row.Add(col.ColumnName, value);
+                    }
+                    else
+                    {
+                        row.Add(col.ColumnName, dr[col]);
+                    }
+                }
+                listToReturn.Add(row);
+            }
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            serializer.MaxJsonLength = 50000000;
+            string strToReturn = serializer.Serialize(listToReturn);
+            return strToReturn;
+        }
