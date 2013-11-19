@@ -16,9 +16,6 @@ http://localhost:35798/RestServiceImpl.svc
  Sankara -  username/ Password: sankarapandiancgs / Passw0rd
 
 
-
-college management system
-
 http://192.64.85.164/CmsNew/Index.aspx
 
 admin
